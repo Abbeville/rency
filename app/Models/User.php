@@ -51,7 +51,12 @@ class User extends Authenticatable
 
     public function account()
     {
-        return $this->belongsTo(Account::class);
+        return $this->belongsTo(Organization::class);
+    }
+
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
     }
 
     public function getNameAttribute()
