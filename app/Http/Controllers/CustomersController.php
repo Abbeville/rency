@@ -2,14 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Request;
+use Illuminate\Validation\Rule;
+use Inertia\Inertia;
 use App\Models\Customer;
 
 class CustomersController extends Controller
 {
     public function index()
     {
-        return Inertia::render('Customers/Index', [
+        // return Inertia::render('Customers/Index', [
+        return view('pages.customers.index', [
             'filters' => Request::all('search', 'role', 'trashed'),
             'customers' => (new Customer)
                 ->orderByName()
@@ -17,7 +22,7 @@ class CustomersController extends Controller
                 ->get()
                 ->transform(fn ($customer) => [
                     'id' => $customer->id,
-                    'name' => $customer->fullname,
+                    'fullname' => $customer->fullname,
                     'email' => $customer->email,
                     'phone' => $customer->phone,
                     'sex' => $customer->sex
@@ -27,14 +32,15 @@ class CustomersController extends Controller
 
     public function create()
     {
-        return Inertia::render('Customers/Create');
+        // return Inertia::render('Customers/Create');
+        return view('pages.customers.create');
     }
 
     public function store()
     {
         Request::validate([
             'fullname' => ['required', 'max:50'],
-            'email' => ['required', 'max:50', 'email', Rule::unique('customers')],
+            'email' => ['required', 'max:50', 'email'],
             'phone' => ['required', Rule::unique('customers')],
             'sex' => ['required']
         ]);
@@ -51,7 +57,8 @@ class CustomersController extends Controller
 
     public function edit(Customer $customer)
     {
-        return Inertia::render('Customers/Edit', [
+        // return Inertia::render('Customers/Edit', [
+        return view('pages.customers.edit', [
             'customer' => [
                 'id' => $customer->id,
                 'fullname' => $customer->fullname,
@@ -64,16 +71,19 @@ class CustomersController extends Controller
 
     public function update(Customer $customer)
     {
-        Request::validate([
-            'fullame' => ['required', 'max:50'],
-            'email' => ['required', 'max:50', 'email', Rule::unique('users')->ignore($user->id)],
-            'phone' => ['required', 'max:50',  Rule::unique('users')->ignore($user->id)],
-            'sex' => ['nullable']
-        ]);
+        // Request::validate([
+        //     'fullame' => ['required', 'max:50'],
+        //     'email' => ['required', 'max:50', 'email'],
+        //     'phone' => ['required', 'max:50',  Rule::unique('customers')->ignore($customer->id)],
+        //     'sex' => ['required']
+        // ]);
+
+        // dd(Request::all());
 
         $customer->update(Request::only('fullname', 'email', 'phone', 'sex'));
 
-        return Redirect::back()->with('success', 'Customer updated.');
+        // return Redirect::back()->with('success', 'Customer updated.');
+        return Redirect::route('customers')->with('success', 'Customer updated.');
     }
 
     public function destroy(Customer $customer)

@@ -1,16 +1,14 @@
-# Ping CRM
+# Rency Inventory
 
-A demo application to illustrate how Inertia.js works.
-
-![](https://raw.githubusercontent.com/inertiajs/pingcrm/master/screenshot.png)
+An application to illustrate how Inertia.js works.
 
 ## Installation
 
 Clone the repo locally:
 
 ```sh
-git clone https://github.com/inertiajs/pingcrm.git pingcrm
-cd pingcrm
+git clone https://github.com/Abbeville/rency.git rency
+cd rency
 ```
 
 Install PHP dependencies:
@@ -67,14 +65,14 @@ Run the dev server (the output will give the address):
 php artisan serve
 ```
 
-You're ready to go! Visit Ping CRM in your browser, and login with:
+You're ready to go! Visit Rency Inventory in your browser, and login with:
 
 - **Username:** johndoe@example.com
 - **Password:** secret
 
 ## Running tests
 
-To run the Ping CRM tests, run:
+To run the Rency Inventory tests, run:
 
 ```
 phpunit

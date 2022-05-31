@@ -2,14 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Request;
+use App\Models\Category;
 use App\Models\Service;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\URL;
 
 class ServicesController extends Controller
 {
     public function index()
     {
-        return Inertia::render('Services/Index', [
+        return view('pages.services.index', [
             'filters' => Request::all('search', 'role', 'trashed'),
             'services' => Service::with('category')
                 ->orderByName()
@@ -18,14 +21,23 @@ class ServicesController extends Controller
                 ->transform(fn ($service) => [
                     'id' => $service->id,
                     'name' => $service->name,
-                    'price' => $service->price
+                    'code' => $service->code,
+                    'image' => $service->image ? URL::route('image', ['path' => $service->image, 'w' => 60, 'h' => 60, 'fit' => 'crop']) : null,
+                    'category' => $service->category->name,
+                    'price' => $service->price,
+                    'inStock' => $service->stock,
+                    'description' => $service->description
                 ]),
         ]);
     }
 
     public function create()
     {
-        return Inertia::render('Services/Create');
+
+        // return Inertia::render('Services/Create');
+        return view('pages.services.create', [
+            'categories' => Category::where('type', 'service')->get()
+        ]);
     }
 
     public function store()
@@ -33,54 +45,69 @@ class ServicesController extends Controller
         Request::validate([
             'name' => ['required', 'max:50'],
             'price' => ['required', 'integer'],
-            'category_id' => ['required']
+            'category_id' => ['required', 'integer']
         ]);
 
-        Product::create([
+        Service::create([
             'name' => Request::get('name'),
+            'code' => Request::get('code'),
             'price' => Request::get('price'),
-            'category_id' => Request::get('category_id')
+            'description' => Request::get('description'),
+            'category_id' => Request::get('category_id'),
+            'image' => Request::file('image') ? Request::file('image')->store('services') : null,
         ]);
 
-        return Redirect::route('products')->with('success', 'Product created.');
+        return Redirect::route('services')->with('success', 'Service created.');
     }
 
-    public function edit(Product $product)
+    public function edit($service)
     {
-        return Inertia::render('Services/Edit', [
-            'customer' => [
-                'id' => $product->id,
-                'name' => $product->name,
-                'price' => $product->price,
-                'stock' => $product->stock
+        $service = Service::findOrFail($service);
+        // return Inertia::render('Services/Edit', [
+        return view('pages.services.edit', [
+            'categories' => Category::where('type', 'service')->get(),
+            'service' => [
+                'id' => $service->id,
+                'name' => $service->name,
+                'price' => $service->price,
+                'code' => $service->code,
+                'description' => $service->description,
+                'category_id' => $service->category_id,
+                'image' => $service->image ? URL::route('image', ['path' => $service->image, 'w' => 60, 'h' => 60, 'fit' => 'crop']) : null,
             ],
         ]);
     }
 
-    public function update(Product $product)
+    public function update($service)
     {
+        $service = Service::findOrFail($service);
         Request::validate([
             'name' => ['required', 'max:50'],
-            'price' => ['required', 'integer'],
-            'stock' => ['nullable']
+            'price' => ['required', 'integer']
         ]);
 
-        $product->update(Request::only('name', 'price', 'stock'));
+        $service->update(Request::only('name', 'price','description','code','category_id'));
+        if (Request::file('image')) {
+            $service->update(['image' => Request::file('image')->store('services')]);
+        }
 
-        return Redirect::back()->with('success', 'Product updated.');
+        // return Redirect::back()->with('success', 'Service updated.');
+        return Redirect::route('services')->with('success', 'Service updated.');
     }
 
-    public function destroy(Product $product)
+    public function destroy($service)
     {
-        $product->delete();
+        $service = Service::findOrFail($service);
+        $service->delete();
 
-        return Redirect::back()->with('success', 'Product deleted.');
+        return Redirect::back()->with('success', 'Service deleted.');
     }
 
-    public function restore(Product $product)
+    public function restore($service)
     {
-        $product->restore();
+        $service = Service::findOrFail($service);
+        $service->restore();
 
-        return Redirect::back()->with('success', 'Product restored.');
+        return Redirect::back()->with('success', 'Service restored.');
     }
 }

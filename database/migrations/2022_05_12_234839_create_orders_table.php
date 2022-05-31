@@ -17,7 +17,7 @@ class CreateOrdersTable extends Migration
             $table->id();
             $table->string('orderId')->nullable();
             $table->unsignedBigInteger('user_id');
-            $table->unsignedBigInteger('customer_id');
+            $table->unsignedBigInteger('customer_id')->nullable();
             $table->unsignedBigInteger('product_service_id');
             $table->enum('type', ['product', 'service']);
             $table->integer('unit');

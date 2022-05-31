@@ -1,12 +1,16 @@
 <?php
 
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
-use App\Http\Controllers\ContactsController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ImagesController;
-use App\Http\Controllers\OrganizationsController;
 use App\Http\Controllers\ReportsController;
 use App\Http\Controllers\UsersController;
+use App\Http\Controllers\CustomersController;
+use App\Http\Controllers\ProductsController;
+use App\Http\Controllers\ServicesController;
+use App\Http\Controllers\CategoriesController;
+use App\Http\Controllers\InvoiceController;
+use App\Http\Controllers\OrdersController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -58,7 +62,7 @@ Route::middleware('auth')->group(function () {
     Route::put('users/{user}', [UsersController::class, 'update'])
         ->name('users.update');
 
-    Route::delete('users/{user}', [UsersController::class, 'destroy'])
+    Route::get('users/{user}', [UsersController::class, 'destroy'])
         ->name('users.destroy');
 
     Route::put('users/{user}/restore', [UsersController::class, 'restore'])
@@ -81,57 +85,80 @@ Route::middleware('auth')->group(function () {
     Route::put('customers/{customer}', [CustomersController::class, 'update'])
         ->name('customers.update');
 
-    Route::delete('customers/{customer}', [CustomersController::class, 'destroy'])
+    Route::get('customers/{customer}', [CustomersController::class, 'destroy'])
         ->name('customers.destroy');
 
     Route::put('customers/{customer}/restore', [CustomersController::class, 'restore'])
         ->name('customers.restore');
 
-    // Organizations
+    // Products
 
-    Route::get('organizations', [OrganizationsController::class, 'index'])
-        ->name('organizations');
+    Route::get('products', [ProductsController::class, 'index'])
+        ->name('products');
 
-    Route::get('organizations/create', [OrganizationsController::class, 'create'])
-        ->name('organizations.create');
+    Route::get('products/create', [ProductsController::class, 'create'])
+        ->name('products.create');
 
-    Route::post('organizations', [OrganizationsController::class, 'store'])
-        ->name('organizations.store');
+    Route::post('products', [ProductsController::class, 'store'])
+        ->name('products.store');
 
-    Route::get('organizations/{organization}/edit', [OrganizationsController::class, 'edit'])
-        ->name('organizations.edit');
+    Route::get('products/{product}/edit', [ProductsController::class, 'edit'])
+        ->name('products.edit');
 
-    Route::put('organizations/{organization}', [OrganizationsController::class, 'update'])
-        ->name('organizations.update');
+    Route::put('products/{product}/update', [ProductsController::class, 'update'])
+        ->name('products.update');
 
-    Route::delete('organizations/{organization}', [OrganizationsController::class, 'destroy'])
-        ->name('organizations.destroy');
+    Route::get('products/{product}', [ProductsController::class, 'destroy'])
+        ->name('products.destroy');
 
-    Route::put('organizations/{organization}/restore', [OrganizationsController::class, 'restore'])
-        ->name('organizations.restore');
+    Route::get('products/{product}/restore', [ProductsController::class, 'restore'])
+        ->name('products.restore');
 
-    // Contacts
+    // Services
 
-    Route::get('contacts', [ContactsController::class, 'index'])
-        ->name('contacts');
+    Route::get('services', [ServicesController::class, 'index'])
+        ->name('services');
 
-    Route::get('contacts/create', [ContactsController::class, 'create'])
-        ->name('contacts.create');
+    Route::get('services/create', [ServicesController::class, 'create'])
+        ->name('services.create');
 
-    Route::post('contacts', [ContactsController::class, 'store'])
-        ->name('contacts.store');
+    Route::post('services', [ServicesController::class, 'store'])
+        ->name('services.store');
 
-    Route::get('contacts/{contact}/edit', [ContactsController::class, 'edit'])
-        ->name('contacts.edit');
+    Route::get('services/{product}/edit', [ServicesController::class, 'edit'])
+        ->name('services.edit');
 
-    Route::put('contacts/{contact}', [ContactsController::class, 'update'])
-        ->name('contacts.update');
+    Route::put('services/{product}/update', [ServicesController::class, 'update'])
+        ->name('services.update');
 
-    Route::delete('contacts/{contact}', [ContactsController::class, 'destroy'])
-        ->name('contacts.destroy');
+    Route::get('services/{product}', [ServicesController::class, 'destroy'])
+        ->name('services.destroy');
 
-    Route::put('contacts/{contact}/restore', [ContactsController::class, 'restore'])
-        ->name('contacts.restore');
+    Route::get('services/{product}/restore', [ServicesController::class, 'restore'])
+        ->name('services.restore');
+
+    // Categories
+
+    Route::get('categories', [CategoriesController::class, 'index'])
+        ->name('categories');
+
+    Route::get('categories/create', [CategoriesController::class, 'create'])
+        ->name('categories.create');
+
+    Route::post('categories', [CategoriesController::class, 'store'])
+        ->name('categories.store');
+
+    Route::get('categories/{category}/edit', [CategoriesController::class, 'edit'])
+        ->name('categories.edit');
+
+    Route::put('categories/{category}/update', [CategoriesController::class, 'update'])
+        ->name('categories.update');
+
+    Route::get('categories/{category}', [CategoriesController::class, 'destroy'])
+        ->name('categories.destroy');
+
+    Route::get('categories/{category}/restore', [CategoriesController::class, 'restore'])
+        ->name('categories.restore');
 
     // Reports
 
@@ -145,3 +172,19 @@ Route::middleware('auth')->group(function () {
 Route::get('/img/{path}', [ImagesController::class, 'show'])
     ->where('path', '.*')
     ->name('image');
+
+// Invoice
+
+Route::get('invoice', [InvoiceController::class, 'index'])
+    ->name('invoice');
+
+// Orders
+
+Route::get('orders', [OrdersController::class, 'index'])
+    ->name('orders');
+
+Route::get('orders/create', [OrdersController::class, 'create'])
+    ->name('orders.create');
+
+Route::post('orders', [OrdersController::class, 'store'])
+    ->name('orders.store');
